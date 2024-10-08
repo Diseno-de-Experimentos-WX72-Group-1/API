@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - PetAndCareAPI
+name: Build and deploy JAR app to Azure Web App - petandcareAPI
 
 on:
   push:
@@ -19,20 +19,17 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: 'java21'
           distribution: 'microsoft'
 
-      - name: Set executable permissions
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew bootJar  # Cambiado a bootJar para construir el JAR
+      - name: Build with Maven
+        run: mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: './build/libs/*.jar'  # Ajusta la ruta para buscar el JAR
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,15 +49,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4F14D53CC521422D850E557DE6C2D8FC }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BEC3DB0C57AE46E48EB04429E0369D0A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F7F5D7CFB9A242F8A84CDCDFDE5B2BFA }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AB5A72458DCB4E938AD2C3D2A745050F }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_83B656C94C47431B82EA781FFE754BEF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5045142E81914E93A424DFC489333B7B }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'PetAndCareAPI'
+          app-name: 'petandcareAPI'
           slot-name: 'Production'
           package: '*.jar'
           
